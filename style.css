@@ -79,4 +79,25 @@ body {
 .backdrop-blur-sm {
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+
+}
+/* Fix for the bottom overlap */
+body {
+    padding-bottom: 80px; /* Gives space for the bottom nav */
+}
+
+/* Ensure images don't stretch weirdly */
+.product-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+/* Hide scrollbar but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
