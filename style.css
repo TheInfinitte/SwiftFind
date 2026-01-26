@@ -1,0 +1,82 @@
+/* SWIFT FIND BRAND COLORS 
+   These variables make it easy to change your brand color in one place 
+   and have it update across the entire website.
+*/
+:root {
+    --swift-blue: #0F3460;     /* Deep Navy from your logo */
+    --electric-cyan: #22D3EE;  /* Bright Cyan "pop" color */
+    --mint-frost: #F0FDFA;     /* Very light background color */
+}
+
+/* BASE STYLES
+   Setting the default look for the whole page.
+*/
+body {
+    font-family: 'Inter', sans-serif; /* Clean, modern font */
+    background-color: var(--mint-frost);
+    margin: 0;
+    padding: 0;
+}
+
+/* BRANDING UTILITIES 
+   These are "helper" classes you can use in your HTML like: class="text-swift-blue"
+*/
+.bg-swift-blue { background-color: var(--swift-blue); }
+.text-swift-blue { color: var(--swift-blue); }
+.border-swift-blue { border-color: var(--swift-blue); }
+
+.bg-electric-cyan { background-color: var(--electric-cyan); }
+.text-electric-cyan { color: var(--electric-cyan); }
+
+/* BUTTON STYLING 
+   Standardized look for your primary action buttons.
+*/
+.btn-primary {
+    background-color: var(--swift-blue);
+    color: white;
+    /* transition: makes the hover effect smooth rather than a sharp jump */
+    transition: all 0.3s ease; 
+}
+
+.btn-primary:hover {
+    background-color: var(--electric-cyan);
+    color: var(--swift-blue); /* Text turns dark when button turns bright */
+    transform: translateY(-2px); /* Makes button "lift" slightly on hover */
+}
+
+/* POP CARD STYLING 
+   The design for the individual product cards in the marketplace.
+*/
+.pop-card {
+    background: white;
+    border-radius: 24px;
+    padding: 16px;
+    /* Subtle border so it doesn't look harsh */
+    border: 1px solid rgba(15, 52, 96, 0.05); 
+    /* cubic-bezier: gives it a "bouncy" feel when hovering */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.pop-card:hover {
+    /* Shadow gets bigger on hover to make it look like it's floating */
+    box-shadow: 0 20px 25px -5px rgba(15, 52, 96, 0.1);
+}
+
+/* NEATNESS UTILITIES 
+   Custom bits to keep the UI looking professional.
+*/
+
+/* Hides the scrollbar on the category list but still allows scrolling */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Smooth fade for the Modal background */
+.backdrop-blur-sm {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}

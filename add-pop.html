@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swift Find | Create New Pop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-mint-frost">
+
+    <main class="max-w-xl mx-auto px-6 py-12">
+        <div class="mb-8 flex items-center justify-between">
+            <a href="dashboard.html" class="text-swift-blue font-bold text-sm hover:text-electric-cyan transition">← Cancel</a>
+            <h1 class="text-xl font-black text-swift-blue tracking-tighter">New Product Pop</h1>
+            <div class="w-10"></div> </div>
+
+        <div class="bg-white rounded-[40px] p-8 shadow-xl border border-gray-100">
+            <form id="popForm" action="dashboard.html" class="space-y-6">
+                
+                <div class="w-full h-48 bg-gray-50 border-2 border-dashed border-gray-200 rounded-3xl flex flex-col items-center justify-center gap-2 group hover:border-electric-cyan transition-colors cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-300 group-hover:text-electric-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Tap to Upload Photo</span>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Item Name</label>
+                    <input type="text" required placeholder="e.g., Baggy Vintage Jeans" 
+                        class="w-full bg-gray-50 p-4 rounded-2xl border-none focus:ring-2 focus:ring-swift-blue outline-none transition-all font-bold text-swift-blue">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Price (₦)</label>
+                        <input type="number" required placeholder="4500" 
+                            class="w-full bg-gray-50 p-4 rounded-2xl border-none focus:ring-2 focus:ring-swift-blue outline-none transition-all font-bold text-swift-blue">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Color/Detail</label>
+                        <input type="text" required placeholder="e.g., Black" 
+                            class="w-full bg-gray-50 p-4 rounded-2xl border-none focus:ring-2 focus:ring-swift-blue outline-none transition-all font-bold text-swift-blue">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Category</label>
+                    <select class="w-full bg-gray-50 p-4 rounded-2xl border-none focus:ring-2 focus:ring-swift-blue outline-none transition-all font-bold text-swift-blue appearance-none">
+                        <option>Clothing</option>
+                        <option>Food</option>
+                        <option>Essentials</option>
+                        <option>Gadgets</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="w-full btn-primary py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg shadow-blue-100">
+                    Launch this Pop
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <div id="successModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6">
+        <div class="absolute inset-0 bg-swift-blue/40 backdrop-blur-md"></div>
+        
+        <div class="bg-white rounded-[40px] p-10 text-center shadow-2xl relative z-10 max-w-xs w-full">
+            <div class="w-20 h-20 bg-mint-frost rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-electric-cyan" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <h2 class="text-2xl font-black text-swift-blue mb-2">Pop Launched!</h2>
+            <p class="text-sm text-gray-400 font-bold uppercase tracking-widest mb-8">It's now live on the map</p>
+            
+            <a href="dashboard.html" class="block w-full bg-swift-blue text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-electric-cyan hover:text-swift-blue transition-all">
+                Return to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
