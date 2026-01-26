@@ -102,25 +102,44 @@ function makePayment(amount, productName) {
             console.log("Payment window closed");
         }
     });
-
 }
-// --- ADMIN & SOLD TOGGLE LOGIC ---
 
+// --- IMPROVED ADMIN LOGIC ---
 let clickCount = 0;
-function adminClick() {
-    clickCount++;
-    if (clickCount === 5) { // Tap 'JD' 5 times
-        const pass = prompt("Admin Password:");
-        if (pass === "abraka001") {
-            alert("Admin Mode Active");
-            document.querySelectorAll('.admin-btn').forEach(b => b.classList.remove('hidden'));
-        }
+let lastClickTime = 0;
+
+window.adminClick = function() {
+    const currentTime = new Date().getTime();
+    
+    // Reset count if clicks are too far apart (more than 2 seconds)
+    if (currentTime - lastClickTime > 2000) {
         clickCount = 0;
     }
-}
+    
+    clickCount++;
+    lastClickTime = currentTime;
+    
+    console.log("Admin click count:", clickCount); // Check this in your mobile inspect
 
-function toggleSold(id) {
+    if (clickCount >= 5) {
+        const pass = prompt("Enter Admin Password:");
+        if (pass === "abraka001") {
+            alert("Admin Mode Active!");
+            document.querySelectorAll('.admin-btn').forEach(btn => {
+                btn.style.display = 'block'; // Force show
+                btn.classList.remove('hidden');
+            });
+        } else {
+            alert("Incorrect Password");
+        }
+        clickCount = 0; // Reset after attempt
+    }
+};
+
+window.toggleSold = function(id) {
     const overlay = document.getElementById(`overlay-${id}`);
+    if (!overlay) return;
+
     const isHidden = overlay.classList.contains('hidden');
     
     if (isHidden) {
@@ -130,14 +149,4 @@ function toggleSold(id) {
         overlay.classList.add('hidden');
         localStorage.setItem(`sold-${id}`, "false");
     }
-}
-
-// Check saved status on load
-window.addEventListener('load', () => {
-    document.querySelectorAll('.product-card').forEach(card => {
-        const id = card.id.replace('product-', '');
-        if (localStorage.getItem(`sold-${id}`) === "true") {
-            document.getElementById(`overlay-${id}`).classList.remove('hidden');
-        }
-    });
-});
+};
