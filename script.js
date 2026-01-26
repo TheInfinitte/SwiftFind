@@ -102,4 +102,42 @@ function makePayment(amount, productName) {
             console.log("Payment window closed");
         }
     });
+
 }
+// --- ADMIN & SOLD TOGGLE LOGIC ---
+
+let clickCount = 0;
+function adminClick() {
+    clickCount++;
+    if (clickCount === 5) { // Tap 'JD' 5 times
+        const pass = prompt("Admin Password:");
+        if (pass === "abraka001") {
+            alert("Admin Mode Active");
+            document.querySelectorAll('.admin-btn').forEach(b => b.classList.remove('hidden'));
+        }
+        clickCount = 0;
+    }
+}
+
+function toggleSold(id) {
+    const overlay = document.getElementById(`overlay-${id}`);
+    const isHidden = overlay.classList.contains('hidden');
+    
+    if (isHidden) {
+        overlay.classList.remove('hidden');
+        localStorage.setItem(`sold-${id}`, "true");
+    } else {
+        overlay.classList.add('hidden');
+        localStorage.setItem(`sold-${id}`, "false");
+    }
+}
+
+// Check saved status on load
+window.addEventListener('load', () => {
+    document.querySelectorAll('.product-card').forEach(card => {
+        const id = card.id.replace('product-', '');
+        if (localStorage.getItem(`sold-${id}`) === "true") {
+            document.getElementById(`overlay-${id}`).classList.remove('hidden');
+        }
+    });
+});
