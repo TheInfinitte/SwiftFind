@@ -1,152 +1,104 @@
-/* SWIFT FIND CENTRAL LOGIC - MERGED & UPGRADED */
-
-// --- CONFIGURATION ---
-const ADMIN_PHONE = "234XXXXXXXXXX"; // <--- CHANGE THIS to your WhatsApp number (e.g., 2348012345678)
-
-document.addEventListener('DOMContentLoaded', () => {
+/* 1. MAGNIFIER PRELOADER LOGIC
+   Triggered only on page refresh/initial load.
+*/
+window.addEventListener('DOMContentLoaded', () => {
+    const preloader = document.getElementById('preloader');
+    const magnifier = document.getElementById('magnifier');
     
-    // --- 1. SEARCH FILTER LOGIC ---
-    const searchInput = document.getElementById('searchInput');
-    const products = document.querySelectorAll('.product-card');
+    // Start with the bouncing animation
+    magnifier.classList.add('magnifier-bounce');
 
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            const value = e.target.value.toLowerCase();
-            products.forEach(product => {
-                const name = product.getAttribute('data-name').toLowerCase();
-                if (name.includes(value)) {
-                    product.style.display = "block";
-                } else {
-                    product.style.display = "none";
-                }
-            });
-        });
-    }
-
-    // --- 2. MERCHANT FORM LOGIC ---
-    const popForm = document.getElementById('popForm');
-    const successModal = document.getElementById('successModal');
-
-    if (popForm && successModal) {
-        popForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            successModal.classList.remove('hidden');
-        });
-    }
+    // After 2.5 seconds, start the slide-and-reveal sequence
+    setTimeout(() => {
+        preloader.classList.add('preloader-sliding');
+        
+        // Completely remove preloader after animation is done
+        setTimeout(() => {
+            preloader.style.opacity = '0';
+            setTimeout(() => {
+                preloader.style.display = 'none';
+                document.body.classList.add('loaded'); // Trigger ease-out
+            }, 500);
+        }, 1000);
+    }, 2500);
 });
 
-// --- 3. PRODUCT MODAL CONTROLS ---
+/* 2. TAB SWITCHER
+   Prevents preloader from running when just moving between sections.
+*/
+function switchTab(tab) {
+    document.getElementById('marketSection').classList.toggle('hidden', tab !== 'market');
+    document.getElementById('ridesSection').classList.toggle('hidden', tab !== 'rides');
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
 
-function openPop(name, price, amount, detail) {
-    document.getElementById('modalTitle').innerText = name;
-    document.getElementById('modalPrice').innerText = price;
-    document.getElementById('modalDetail').innerText = detail;
+/* 3. SMART MODAL & SWIPE GALLERY
+   Injects images as "snap-items" for the swiping feature.
+*/
+function openProductModal(btn) {
+    const card = btn.closest('.product-card');
+    const title = card.querySelector('h4').innerText;
+    const price = parseInt(card.dataset.price);
+    const colors = card.dataset.colors;
+    const images = card.dataset.images.split(',');
 
-    const payBtn = document.getElementById('modalPayButton');
-    payBtn.onclick = function() {
-        makePayment(amount, name);
-    };
+    document.getElementById('modalTitle').innerText = title;
+    document.getElementById('modalColors').innerText = "COLORS: " + colors;
+    document.getElementById('modalDisplayPrice').innerText = "₦" + price.toLocaleString();
+    
+    // Inject images with the snap class
+    const gallery = document.getElementById('imageGallery');
+    gallery.innerHTML = images.map(img => `
+        <div class="gallery-item h-64 overflow-hidden bg-gray-50 flex-shrink-0">
+            <img src="${img.trim()}" class="w-full h-full object-cover">
+        </div>
+    `).join('');
 
     document.getElementById('productModal').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
 }
 
-function closePop() {
-    document.getElementById('productModal').classList.add('hidden');
-    document.body.style.overflow = 'auto';
+/* 4. SMART INQUIRY
+   Tells you exactly which product they are looking at.
+*/
+function contactSeller() {
+    const itemName = document.getElementById('modalTitle').innerText;
+    const phone = "2348000000000"; // Replace with your WhatsApp
+    const text = encodeURIComponent(`Hi SwiftFind! I'm interested in the "${itemName}". Is it available?`);
+    window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
 }
 
-// --- 4. UPGRADED FLUTTERWAVE GATEWAY ---
-
-function makePayment(amount, productName) {
-    // Generate a unique reference for THIS specific attempt
-    const uniqueRef = "SF-" + Date.now();
-
-    FlutterwaveCheckout({
-        public_key: "FLWPUBK_TEST-b521df3186db29fcd49996bc2ebc22a2-X", 
-        tx_ref: uniqueRef,
-        amount: amount,
-        currency: "NGN",
-        payment_options: "card, banktransfer, ussd",
-        customer: {
-            email: "student@abraka.com", 
-            phone_number: "08012345678",
-            name: "Swift Find Buyer",
-        },
-        customizations: {
-            title: "Swift Find Marketplace",
-            description: "Payment for " + productName,
-            logo: "https://your-logo-url.com/logo.png",
-        },
-        callback: function (data) {
-            console.log("Payment successful!", data);
-
-            // 1. Prepare the WhatsApp Verification Message
-            const message = `🚀 *PAYMENT VERIFIED*\n\n` +
-                          `I just paid for: *${productName}*\n` +
-                          `Amount: *₦${amount}*\n` +
-                          `Ref ID: _${uniqueRef}_\n\n` +
-                          `Please confirm so I can collect my item!`;
-
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappURL = `https://wa.me/${ADMIN_PHONE}?text=${encodedMessage}`;
-
-            // 2. Close the modal and let the user know
-            closePop();
-            
-            // 3. Redirect to WhatsApp automatically
-            alert("Payment Confirmed! Redirecting to WhatsApp to verify your receipt.");
-            window.location.href = whatsappURL;
-        },
-        onclose: function() {
-            console.log("Payment window closed");
-        }
+/* 5. SEARCH & FILTER */
+function searchProducts() {
+    let input = document.getElementById('searchInput').value.toLowerCase();
+    let cards = document.querySelectorAll('.product-card');
+    cards.forEach(card => {
+        card.style.display = card.dataset.name.includes(input) ? "block" : "none";
     });
 }
 
-// --- IMPROVED ADMIN LOGIC ---
-let clickCount = 0;
-let lastClickTime = 0;
+function filterCategory(cat) {
+    let cards = document.querySelectorAll('.product-card');
+    cards.forEach(card => {
+        const name = card.dataset.name.toLowerCase();
+        card.style.display = (cat === 'all' || name.includes(cat)) ? "block" : "none";
+    });
+}
 
-window.adminClick = function() {
-    const currentTime = new Date().getTime();
-    
-    // Reset count if clicks are too far apart (more than 2 seconds)
-    if (currentTime - lastClickTime > 2000) {
-        clickCount = 0;
+/* 6. ADMIN MODE */
+let adminClicks = 0;
+function handleAdminClick() {
+    adminClicks++;
+    if (adminClicks >= 5) {
+        document.body.classList.toggle('admin-mode');
+        alert("Admin Mode: Active");
+        adminClicks = 0;
     }
-    
-    clickCount++;
-    lastClickTime = currentTime;
-    
-    console.log("Admin click count:", clickCount); // Check this in your mobile inspect
+}
 
-    if (clickCount >= 5) {
-        const pass = prompt("Enter Admin Password:");
-        if (pass === "abraka001") {
-            alert("Admin Mode Active!");
-            document.querySelectorAll('.admin-btn').forEach(btn => {
-                btn.style.display = 'block'; // Force show
-                btn.classList.remove('hidden');
-            });
-        } else {
-            alert("Incorrect Password");
-        }
-        clickCount = 0; // Reset after attempt
-    }
-};
+function toggleSold(btn) {
+    const card = btn.closest('.product-card');
+    card.querySelector('.sold-indicator').classList.toggle('hidden');
+    card.querySelector('.sold-indicator').classList.toggle('flex');
+}
 
-window.toggleSold = function(id) {
-    const overlay = document.getElementById(`overlay-${id}`);
-    if (!overlay) return;
-
-    const isHidden = overlay.classList.contains('hidden');
-    
-    if (isHidden) {
-        overlay.classList.remove('hidden');
-        localStorage.setItem(`sold-${id}`, "true");
-    } else {
-        overlay.classList.add('hidden');
-        localStorage.setItem(`sold-${id}`, "false");
-    }
-};
+function closeModal() { document.getElementById('productModal').classList.add('hidden'); }
