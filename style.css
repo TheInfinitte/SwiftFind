@@ -1,26 +1,23 @@
 /* SWIFT FIND BRAND COLORS 
-   These variables make it easy to change your brand color in one place 
-   and have it update across the entire website.
+   Centralizing colors for consistency across Marketplace & Logistics.
 */
 :root {
-    --swift-blue: #0F3460;     /* Deep Navy from your logo */
-    --electric-cyan: #22D3EE;  /* Bright Cyan "pop" color */
-    --mint-frost: #F0FDFA;     /* Very light background color */
+    --swift-blue: #0F3460;     /* Deep Navy */
+    --electric-cyan: #22D3EE;  /* Bright Cyan "pop" */
+    --mint-frost: #F0FDFA;     /* Light background */
 }
 
-/* BASE STYLES
-   Setting the default look for the whole page.
-*/
+/* BASE STYLES */
 body {
-    font-family: 'Inter', sans-serif; /* Clean, modern font */
+    font-family: 'Inter', sans-serif;
     background-color: var(--mint-frost);
     margin: 0;
     padding: 0;
+    color: var(--swift-blue);
+    overflow-x: hidden; /* Prevents unwanted side-scrolling */
 }
 
-/* BRANDING UTILITIES 
-   These are "helper" classes you can use in your HTML like: class="text-swift-blue"
-*/
+/* BRANDING UTILITIES */
 .bg-swift-blue { background-color: var(--swift-blue); }
 .text-swift-blue { color: var(--swift-blue); }
 .border-swift-blue { border-color: var(--swift-blue); }
@@ -29,71 +26,75 @@ body {
 .text-electric-cyan { color: var(--electric-cyan); }
 
 /* BUTTON STYLING 
-   Standardized look for your primary action buttons.
+   Primary buttons with a lift effect on hover.
 */
 .btn-primary {
     background-color: var(--swift-blue);
     color: white;
-    /* transition: makes the hover effect smooth rather than a sharp jump */
     transition: all 0.3s ease; 
 }
 
 .btn-primary:hover {
     background-color: var(--electric-cyan);
-    color: var(--swift-blue); /* Text turns dark when button turns bright */
-    transform: translateY(-2px); /* Makes button "lift" slightly on hover */
+    color: var(--swift-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(34, 211, 238, 0.3);
 }
 
 /* POP CARD STYLING 
-   The design for the individual product cards in the marketplace.
+   Individual product cards with a bouncy hover effect.
 */
 .pop-card {
     background: white;
     border-radius: 24px;
     padding: 16px;
-    /* Subtle border so it doesn't look harsh */
     border: 1px solid rgba(15, 52, 96, 0.05); 
-    /* cubic-bezier: gives it a "bouncy" feel when hovering */
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative; /* Necessary for the Sold overlay */
 }
 
 .pop-card:hover {
-    /* Shadow gets bigger on hover to make it look like it's floating */
     box-shadow: 0 20px 25px -5px rgba(15, 52, 96, 0.1);
 }
 
-/* NEATNESS UTILITIES 
-   Custom bits to keep the UI looking professional.
+/* SOLD OVERLAY STYLING 
+   This appears over the product image when you toggle 'SOLD' as an admin.
 */
-
-/* Hides the scrollbar on the category list but still allows scrolling */
-.no-scrollbar::-webkit-scrollbar {
-    display: none;
-}
-.no-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-}
-
-/* Smooth fade for the Modal background */
-.backdrop-blur-sm {
+.sold-indicator {
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-
-}
-/* Fix for the bottom overlap */
-body {
-    padding-bottom: 80px; /* Gives space for the bottom nav */
+    border-radius: 16px;
 }
 
-/* Ensure images don't stretch weirdly */
-.product-card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
+.sold-indicator span {
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
 
-/* Hide scrollbar but keep functionality */
+/* ADMIN MODE UTILITIES 
+   Hide admin buttons by default. They only show when <body> has the .admin-mode class.
+*/
+.admin-only {
+    display: none; 
+}
+
+body.admin-mode .admin-only {
+    display: block !important;
+}
+
+/* MULTI-IMAGE GALLERY SWIPE 
+   Makes the product images snap into place when swiped in the modal.
+*/
+#imageGallery {
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+#imageGallery div {
+    scroll-snap-align: center;
+}
+
+/* NEATNESS UTILITIES */
 .no-scrollbar::-webkit-scrollbar {
     display: none;
 }
@@ -101,3 +102,98 @@ body {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
+/* Smooth fade for the Modal background */
+.backdrop-blur-md {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* Ride Section Inputs Styling */
+#ridesSection input, #ridesSection select {
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+#ridesSection input:focus, #ridesSection select:focus {
+    border-color: var(--electric-cyan);
+    background-color: white;
+    box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.1);
+}
+
+/* ANIMATION: Modal Slide Up */
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+#productModal > div:last-child {
+    animation: slideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+/* BRAND COLORS */
+:root {
+    --swift-blue: #0F3460;
+    --electric-cyan: #22D3EE;
+    --mint-frost: #F0FDFA;
+}
+
+/* PAGE ENTRY ANIMATION: Ease-Out */
+body.loaded {
+    opacity: 1;
+    transition: opacity 1.2s ease-out;
+}
+
+/* MAGNIFIER ANIMATION */
+@keyframes magnify-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-40px); }
+}
+
+@keyframes magnifier-slide-out {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-150vw); } /* Slides completely off screen */
+}
+
+@keyframes logo-reveal {
+    0% { opacity: 0; transform: translateX(50px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+.magnifier-bounce {
+    animation: magnify-bounce 1.5s ease-in-out infinite;
+}
+
+.preloader-sliding #magnifier {
+    animation: magnifier-slide-out 1s forwards cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.preloader-sliding #logoText {
+    animation: logo-reveal 1s forwards ease-out;
+}
+
+/* SWIPE GALLERY FIX: Ensures snap works */
+#imageGallery {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.gallery-item {
+    flex: 0 0 100%; /* Force image to take full modal width */
+    scroll-snap-align: center;
+    border-radius: 24px;
+}
+
+/* ADMIN TOOLS DISPLAY */
+.admin-only {
+    display: none; 
+}
+body.admin-mode .admin-only {
+    display: block !important;
+}
+
+/* NEATNESS UTILITIES */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
