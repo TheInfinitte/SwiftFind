@@ -3,72 +3,265 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swift Find | Marketplace</title>
+    <title>SwiftFind | Marketplace & Logistics</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://checkout.flutterwave.com/v3.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="antialiased bg-white">
+<body class="antialiased opacity-0"> <div id="preloader" class="fixed inset-0 z-[100] bg-white flex items-center justify-center overflow-hidden">
+        <div class="relative flex items-center">
+            <div id="magnifier" class="text-6xl z-10">🔍</div>
+            <h2 id="logoText" class="text-4xl font-black text-swift-blue tracking-tighter ml-[-40px] opacity-0">
+                SwiftFind<span class="text-electric-cyan">.</span>
+            </h2>
+        </div>
+    </div>
 
     <nav class="bg-white border-b border-gray-100 sticky top-0 z-50 px-6 py-4">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-10">
-                <h1 class="text-2xl font-black text-swift-blue tracking-tighter cursor-pointer" onclick="location.reload()">SwiftFind<span class="text-electric-cyan">.</span></h1>
+                <h1 class="text-2xl font-black text-swift-blue tracking-tighter cursor-pointer" onclick="location.reload()">
+                    SwiftFind<span class="text-electric-cyan">.</span>
+                </h1>
                 <div class="hidden md:flex gap-8 text-sm font-bold text-gray-400">
-                    <a href="index.html" class="text-swift-blue underline decoration-electric-cyan decoration-2 underline-offset-8">Marketplace</a>
+                    <button onclick="switchTab('market')" class="hover:text-swift-blue transition font-bold">Marketplace</button>
+                    <button onclick="switchTab('rides')" class="hover:text-swift-blue transition font-bold">Rides & Logistics</button>
                     <a href="how-it-works.html" class="hover:text-swift-blue transition font-bold">How it Works</a>
-                    <a href="register.html" class="hover:text-swift-blue transition">Become a Seller</a>
                 </div>
             </div>
             <div class="flex items-center gap-4">
                 <p class="text-sm font-bold text-gray-800 hidden sm:block">📍 Abraka, Delta</p>
-                <div onclick="adminClick()" class="h-10 w-10 bg-swift-blue rounded-full flex items-center justify-center text-white font-bold cursor-pointer select-none">JD</div>
+                <div id="adminTrigger" onclick="handleAdminClick()" class="h-10 w-10 bg-swift-blue rounded-full flex items-center justify-center text-white font-bold cursor-pointer select-none">JD</div>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-6 pb-20">
+    <main id="marketSection" class="max-w-7xl mx-auto px-6 pb-24">
         <div class="py-12 flex flex-col items-center">
             <h2 class="text-3xl md:text-5xl font-black text-swift-blue text-center mb-8 leading-tight">
                 Essentials for students,<br>delivered in <span class="text-electric-cyan italic underline">minutes.</span>
             </h2>
             <div class="w-full max-w-2xl relative shadow-2xl rounded-2xl">
-                <input type="text" id="searchInput" placeholder="Search for soup, shirts, laundry..." 
+                <input type="text" id="searchInput" onkeyup="searchProducts()" placeholder="Search for soup, shirts, laundry..." 
                     class="w-full bg-white p-6 pl-14 rounded-2xl border-none focus:ring-2 focus:ring-electric-cyan outline-none text-lg">
                 <svg class="absolute left-5 top-6 h-7 w-7 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
             </div>
         </div>
 
         <div class="flex space-x-3 overflow-x-auto pb-8 no-scrollbar">
-            <button class="flex-shrink-0 bg-swift-blue text-white px-8 py-3 rounded-xl text-sm font-bold">All Pops</button>
-            <button class="flex-shrink-0 bg-white border border-gray-100 px-8 py-3 rounded-xl text-sm font-bold">🍜 Food</button>
-            <button class="flex-shrink-0 bg-white border border-gray-100 px-8 py-3 rounded-xl text-sm font-bold">👕 Clothing</button>
+            <button onclick="filterCategory('all')" class="flex-shrink-0 bg-swift-blue text-white px-8 py-3 rounded-xl text-sm font-bold">All Pops</button>
+            <button onclick="filterCategory('food')" class="flex-shrink-0 bg-white border border-gray-100 px-8 py-3 rounded-xl text-sm font-bold hover:text-electric-cyan transition">🍜 Food</button>
+            <button onclick="filterCategory('clothing')" class="flex-shrink-0 bg-white border border-gray-100 px-8 py-3 rounded-xl text-sm font-bold hover:text-electric-cyan transition">👕 Clothing</button>
+            <button onclick="filterCategory('services')" class="flex-shrink-0 bg-white border border-gray-100 px-8 py-3 rounded-xl text-sm font-bold hover:text-electric-cyan transition">🧼 Services</button>
         </div>
 
-        <div>
-            <h3 class="text-xl font-black text-swift-blue mb-6">Nearby Active Pops</h3>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                
-                <div class="pop-card group product-card relative" id="p1" data-name="oversized tee vintage black clothing">
-                    <div id="status-p1" class="hidden absolute inset-0 bg-white/90 z-20 flex items-center justify-center rounded-2xl backdrop-blur-sm">
-                        <span class="border-4 border-red-500 text-red-500 font-black px-4 py-2 rounded-xl -rotate-12">SOLD OUT</span>
-                    </div>
-                    <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-50 flex items-center justify-center">
-                        <span class="text-gray-200 font-black italic">NO IMAGE</span>
-                    </div>
-                    <h4 class="font-black text-swift-blue truncate">Oversized Tee</h4>
-                    <p class="text-[11px] text-gray-400 font-bold uppercase mb-4">Vintage Black / XL</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-lg font-black text-swift-blue">₦4,500</span>
-                        <button onclick="openPop('Oversized Tee', '₦4,500', 4500, 'Vintage Black / XL')" class="btn-primary px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest">View</button>
-                    </div>
-                    <button onclick="toggleSold('p1')" class="admin-btn hidden w-full mt-3 text-[10px] text-red-500 font-black uppercase underline">Toggle Sold</button>
+        <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div class="pop-card group product-card relative" data-name="oversized tee black clothing" data-price="4500" data-colors="Black, Ash, White" data-images="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500, https://images.unsplash.com/photo-1554568218-0f1715e72254?w=500">
+                <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-50">
+                    <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500" class="w-full h-full object-cover">
+                    <div class="sold-indicator absolute inset-0 bg-swift-blue/80 hidden items-center justify-center z-10"><span class="text-white font-black border-2 border-white px-2 rotate-12">SOLD</span></div>
                 </div>
+                <h4 class="font-black text-swift-blue truncate px-1">Oversized Tee</h4>
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-lg font-black text-swift-blue">₦4,500</span>
+                    <button onclick="openProductModal(this)" class="btn-primary px-4 py-2 rounded-lg text-[10px] font-black uppercase">View</button>
+                </div>
+                <button onclick="toggleSold(this)" class="admin-only hidden absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full text-[8px] font-bold z-20">SOLD</button>
+            </div>
 
-                <div class="pop-card group product-card relative" id="p2" data-name="indomie super pack noodles food">
-                    <div id="status-p2" class="hidden absolute inset-0 bg-white/90 z-20 flex items-center justify-center rounded-2xl backdrop-blur-sm">
-                        <span class="border-4 border-red-500 text-red-500 font-black px-4 py-2 rounded-xl -rotate-12">SOLD OUT</span>
-                    </div>
+            <div class="pop-card group product-card relative" data-name="indomie super pack food" data-price="3200" data-colors="Standard" data-images="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=500">
+                <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-orange-50">
+                    <img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=500" class="w-full h-full object-cover">
+                    <div class="sold-indicator absolute inset-0 bg-swift-blue/80 hidden items-center justify-center z-10"><span class="text-white font-black border-2 border-white px-2 rotate-12">SOLD</span></div>
+                </div>
+                <h4 class="font-black text-swift-blue truncate px-1">Indomie Super Pack</h4>
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-lg font-black text-swift-blue">₦3,200</span>
+                    <button onclick="openProductModal(this)" class="btn-primary px-4 py-2 rounded-lg text-[10px] font-black uppercase">View</button>
+                </div>
+                <button onclick="toggleSold(this)" class="admin-only hidden absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full text-[8px] font-bold z-20">SOLD</button>
+            </div>
+
+            <div class="pop-card group product-card relative" data-name="vintage jeans clothing" data-price="8500" data-colors="Blue, Dark Wash" data-images="https://images.unsplash.com/photo-1542272604-787c3835535d?w=500">
+                <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-blue-50">
+                    <img src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=500" class="w-full h-full object-cover">
+                    <div class="sold-indicator absolute inset-0 bg-swift-blue/80 hidden items-center justify-center z-10"><span class="text-white font-black border-2 border-white px-2 rotate-12">SOLD</span></div>
+                </div>
+                <h4 class="font-black text-swift-blue truncate px-1">Vintage Jeans</h4>
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-lg font-black text-swift-blue">₦8,500</span>
+                    <button onclick="openProductModal(this)" class="btn-primary px-4 py-2 rounded-lg text-[10px] font-black uppercase">View</button>
+                </div>
+                <button onclick="toggleSold(this)" class="admin-only hidden absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full text-[8px] font-bold z-20">SOLD</button>
+            </div>
+
+            <div class="pop-card group product-card relative" data-name="rechargeable fan gadgets" data-price="12000" data-colors="White, Navy" data-images="https://images.unsplash.com/photo-1619234140231-97aa35805500?w=500">
+                <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-50">
+                    <img src="https://images.unsplash.com/photo-1619234140231-97aa35805500?w=500" class="w-full h-full object-cover">
+                    <div class="sold-indicator absolute inset-0 bg-swift-blue/80 hidden items-center justify-center z-10"><span class="text-white font-black border-2 border-white px-2 rotate-12">SOLD</span></div>
+                </div>
+                <h4 class="font-black text-swift-blue truncate px-1">Rechargeable Fan</h4>
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-lg font-black text-swift-blue">₦12,000</span>
+                    <button onclick="openProductModal(this)" class="btn-primary px-4 py-2 rounded-lg text-[10px] font-black uppercase">View</button>
+                </div>
+                <button onclick="toggleSold(this)" class="admin-only hidden absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full text-[8px] font-bold z-20">SOLD</button>
+            </div>
+
+            <div class="pop-card group product-card relative" data-name="sneakers shoe fashion" data-price="15000" data-colors="White, Red" data-images="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500">
+                <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-50"><img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500" class="w-full h-full object-cover"></div>
+                <h4 class="font-black text-swift-blue truncate px-1">Running Shoes</h4>
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-lg font-black text-swift-blue">₦15,000</span>
+                    <button onclick="openProductModal(this)" class="btn-primary px-4 py-2 rounded-lg text-[10px] font-black uppercase">View</button>
+                </div>
+            </div>
+
+            <div class="pop-card group product-card relative" data-name="perfume oil beauty" data-price="2500" data-colors="Oud, Vanilla" data-images="https://images.unsplash.com/photo-1541643600914-78b084683601?w=500">
+                <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-50"><img src="https://images.unsplash.com/photo-1541643600914-78b084683601?w=500" class="w-full h-full object-cover"></div>
+                <h4 class="font-black text-swift-blue truncate px-1">Perfume Oil</h4>
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-lg font-black text-swift-blue">₦2,500</span>
+                    <button onclick="openProductModal(this)" class="btn-primary px-4 py-2 rounded-lg text-[10px] font-black uppercase">View</button>
+                </div>
+            </div>
+
+            <div class="pop-card group product-card relative" data-name="power bank gadgets" data-price="9000" data-colors="Black" data-images="https://images.unsplash.com/photo-1609091839697-eb279661f13b?w=500">
+                <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-50"><img src="https://images.unsplash.com/photo-1609091839697-eb279661f13b?w=500" class="w-full h-full object-cover"></div>
+                <h4 class="font-black text-swift-blue truncate px-1">20k mAh PowerBank</h4>
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-lg font-black text-swift-blue">₦9,000</span>
+                    <button onclick="openProductModal(this)" class="btn-primary px-4 py-2 rounded-lg text-[10px] font-black uppercase">View</button>
+                </div>
+            </div>
+
+            <div class="pop-card group product-card relative" data-name="bucket hat fashion" data-price="3000" data-colors="Beige, Black" data-images="https://images.unsplash.com/photo-1583195648430-18b59300ed60?w=500">
+                <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-50"><img src="https://images.unsplash.com/photo-1583195648430-18b59300ed60?w=500" class="w-full h-full object-cover"></div>
+                <h4 class="font-black text-swift-blue truncate px-1">Bucket Hat</h4>
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-lg font-black text-swift-blue">₦3,000</span>
+                    <button onclick="openProductModal(this)" class="btn-primary px-4 py-2 rounded-lg text-[10px] font-black uppercase">View</button>
+                </div>
+            </div>
+
+            <div class="pop-card group product-card relative" data-name="hoodie clothing" data-price="7500" data-colors="Grey, Navy" data-images="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500">
+                <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-50"><img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500" class="w-full h-full object-cover"></div>
+                <h4 class="font-black text-swift-blue truncate px-1">Essential Hoodie</h4>
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-lg font-black text-swift-blue">₦7,500</span>
+                    <button onclick="openProductModal(this)" class="btn-primary px-4 py-2 rounded-lg text-[10px] font-black uppercase">View</button>
+                </div>
+            </div>
+
+            <div class="pop-card group product-card relative" data-name="laptop stand desk" data-price="5500" data-colors="Silver" data-images="https://images.unsplash.com/photo-1616353075d60-03a90c410175?w=500">
+                <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-50"><img src="https://images.unsplash.com/photo-1616353075d60-03a90c410175?w=500" class="w-full h-full object-cover"></div>
+                <h4 class="font-black text-swift-blue truncate px-1">Aluminum Stand</h4>
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-lg font-black text-swift-blue">₦5,500</span>
+                    <button onclick="openProductModal(this)" class="btn-primary px-4 py-2 rounded-lg text-[10px] font-black uppercase">View</button>
+                </div>
+            </div>
+
+            <div class="pop-card group product-card relative" data-name="backpack school bag" data-price="11000" data-colors="Black, Olive" data-images="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500">
+                <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-50"><img src="https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500" class="w-full h-full object-cover"></div>
+                <h4 class="font-black text-swift-blue truncate px-1">Daily Backpack</h4>
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-lg font-black text-swift-blue">₦11,000</span>
+                    <button onclick="openProductModal(this)" class="btn-primary px-4 py-2 rounded-lg text-[10px] font-black uppercase">View</button>
+                </div>
+            </div>
+
+            <div class="pop-card group product-card relative" data-name="tote bag fashion" data-price="2000" data-colors="Canvas" data-images="https://images.unsplash.com/photo-1591337676887-a217a6970a8a?w=500">
+                <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-50"><img src="https://images.unsplash.com/photo-1591337676887-a217a6970a8a?w=500" class="w-full h-full object-cover"></div>
+                <h4 class="font-black text-swift-blue truncate px-1">Minimal Tote</h4>
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-lg font-black text-swift-blue">₦2,000</span>
+                    <button onclick="openProductModal(this)" class="btn-primary px-4 py-2 rounded-lg text-[10px] font-black uppercase">View</button>
+                </div>
+            </div>
+            
+            <div class="pop-card group product-card relative" data-name="smart watch gadgets" data-price="18000" data-colors="Black, Silver" data-images="https://images.unsplash.com/photo-1508685096489-77a5ad2ba674?w=500">
+                <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-50"><img src="https://images.unsplash.com/photo-1508685096489-77a5ad2ba674?w=500" class="w-full h-full object-cover"></div>
+                <h4 class="font-black text-swift-blue truncate px-1">Series 8 SmartWatch</h4>
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-lg font-black text-swift-blue">₦18,000</span>
+                    <button onclick="openProductModal(this)" class="btn-primary px-4 py-2 rounded-lg text-[10px] font-black uppercase">View</button>
+                </div>
+            </div>
+
+            <div class="pop-card group product-card relative" data-name="laundry wash services" data-price="1500" data-colors="Per Batch" data-images="https://images.unsplash.com/photo-1545173168-9f1947eebb7f?w=500">
+                <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-blue-50"><img src="https://images.unsplash.com/photo-1545173168-9f1947eebb7f?w=500" class="w-full h-full object-cover"></div>
+                <h4 class="font-black text-swift-blue truncate px-1">Swift Laundry</h4>
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-lg font-black text-swift-blue">₦1,500</span>
+                    <button onclick="openProductModal(this)" class="btn-primary px-4 py-2 rounded-lg text-[10px] font-black uppercase">View</button>
+                </div>
+            </div>
+
+            <div class="pop-card group product-card relative" data-name="meal box rice food" data-price="2500" data-colors="Jollof, Fried" data-images="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500">
+                <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-gray-50"><img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500" class="w-full h-full object-cover"></div>
+                <h4 class="font-black text-swift-blue truncate px-1">Student Meal Box</h4>
+                <div class="flex justify-between items-center px-1">
+                    <span class="text-lg font-black text-swift-blue">₦2,500</span>
+                    <button onclick="openProductModal(this)" class="btn-primary px-4 py-2 rounded-lg text-[10px] font-black uppercase">View</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <main id="ridesSection" class="max-w-xl mx-auto px-6 py-10 hidden pb-24">
+        <h3 class="text-3xl font-black text-swift-blue mb-2">SwiftRide<span class="text-electric-cyan">.</span></h3>
+        <div class="bg-white p-8 rounded-[40px] shadow-2xl border border-gray-100 mb-8">
+            <div class="space-y-6">
+                <select class="w-full p-5 bg-gray-50 rounded-2xl border-none font-bold text-swift-blue">
+                    <option>Pickup: Site 1 Gate</option>
+                    <option>Pickup: Main Market</option>
+                </select>
+                <select class="w-full p-5 bg-gray-50 rounded-2xl border-none font-bold text-swift-blue">
+                    <option>Destination: Site 3</option>
+                    <option>Destination: Orita Junc</option>
+                </select>
+                <button class="w-full bg-swift-blue text-white py-6 rounded-3xl font-black uppercase tracking-widest shadow-xl">Order Ride</button>
+            </div>
+        </div>
+        <div class="mt-8 bg-swift-blue p-8 rounded-[40px] text-white shadow-2xl relative overflow-hidden">
+            <h4 class="text-xl font-black mb-1 relative z-10">Earn as a Runner 🏃‍♂️</h4>
+            <button onclick="location.href='hub.html'" class="w-full bg-electric-cyan text-swift-blue py-4 rounded-2xl font-black uppercase text-xs mt-4">View Jobs</button>
+        </div>
+    </main>
+
+    <div id="productModal" class="fixed inset-0 z-[70] hidden">
+        <div class="absolute inset-0 bg-swift-blue/60 backdrop-blur-md" onclick="closeModal()"></div>
+        <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-[40px] p-8 max-w-lg mx-auto shadow-2xl">
+            <div id="imageGallery" class="flex gap-0 overflow-x-auto no-scrollbar snap-x snap-mandatory mb-6"></div>
+            
+            <div class="flex justify-between items-start mb-2">
+                <div>
+                    <h2 id="modalTitle" class="text-2xl font-black text-swift-blue tracking-tighter uppercase">Product Name</h2>
+                    <p id="modalColors" class="text-[10px] font-black text-electric-cyan uppercase tracking-widest">COLORS: N/A</p>
+                </div>
+                <div class="text-right">
+                    <span id="modalDisplayPrice" class="text-2xl font-black text-swift-blue">₦0</span>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mt-8">
+                <button onclick="contactSeller()" class="border-2 border-gray-100 py-5 rounded-3xl font-black text-[10px] uppercase text-swift-blue tracking-widest">Inquiry</button>
+                <button id="payButton" class="bg-swift-blue text-white py-5 rounded-3xl font-black text-[10px] uppercase tracking-widest shadow-xl">Pay Now</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-gray-100 flex justify-around p-4 md:hidden z-50">
+        <button onclick="switchTab('market')" class="flex flex-col items-center gap-1">🛍️<span class="text-[9px] font-black uppercase text-swift-blue">Shop</span></button>
+        <button onclick="switchTab('rides')" class="flex flex-col items-center gap-1">🏍️<span class="text-[9px] font-black uppercase text-swift-blue">Rides</span></button>
+        <button onclick="location.href='hub.html'" class="flex flex-col items-center gap-1">➕<span class="text-[9px] font-black uppercase text-swift-blue">Sell</span></button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>                    </div>
                     <div class="relative overflow-hidden rounded-2xl mb-4 h-44 bg-orange-50 flex items-center justify-center">
                         <span class="text-orange-200 font-black italic text-[10px]">PROMO</span>
                     </div>
@@ -212,4 +405,5 @@
 </body>
 
 </html>
+
 
