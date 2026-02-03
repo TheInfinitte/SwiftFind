@@ -1,41 +1,32 @@
-/* MAGNIFIER ANIMATION */
-@keyframes magnify-move {
+/* [ANIMATIONS] - Handling the Magnifier and Transitions */
+@keyframes magnify-bounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-30px); }
 }
 
-@keyframes magnifier-slide-left {
-    to { transform: translateX(-150%) scale(0.5); opacity: 0; }
+@keyframes exit-left {
+    to { transform: translateX(-150%); opacity: 0; }
 }
 
-@keyframes text-reveal {
-    from { opacity: 0; transform: translateX(20px); }
-    to { opacity: 1; transform: translateX(0); }
+/* This class is added via JS to trigger the preloader exit */
+.preloader-off {
+    opacity: 0 !important;
+    pointer-events: none;
+    transition: opacity 0.8s ease-out;
 }
 
-.magnifier-active {
-    animation: magnify-move 1.5s ease-in-out infinite;
-}
+.magnifier-anim { animation: magnify-bounce 1.5s infinite ease-in-out; }
 
-.preloader-done #magnifier {
-    animation: magnifier-slide-left 0.8s forwards cubic-bezier(0.6, -0.28, 0.735, 0.045);
-}
+/* The logo text inside the preloader */
+#logoText { transition: all 0.8s ease; transform: translateX(20px); }
 
-.preloader-done #logoText {
-    animation: text-reveal 0.8s forwards;
-}
-
-/* PAGE TRANSITION */
-body.loaded {
-    opacity: 1;
-}
-
-/* UTILS */
+/* Standard Utilities */
+body.loaded { opacity: 1 !important; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* DYNAMIC BADGE COLORS */
-.verified-badge {
-    background-color: #22D3EE !important;
-    color: #0F3460 !important;
+/* [THEMES] - Colors for the Verification Badge */
+.badge-verified {
+    background-color: #22D3EE !important; /* Cyan */
+    color: #0F3460 !important; /* Dark Blue */
+    font-weight: 900;
 }
