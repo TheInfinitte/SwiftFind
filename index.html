@@ -3,12 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SwiftFind | Campus Logistics</title>
+    <title>SwiftFind | Abraka Logistics</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://checkout.flutterwave.com/v3.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-slate-50 antialiased opacity-0 transition-opacity duration-1000">
+
+    <div class="bg-blue-900 text-white py-2 px-4 flex justify-between items-center text-[9px] font-bold tracking-widest uppercase border-b border-blue-800">
+        <div class="flex items-center gap-2">
+            <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-400"></span>
+            </span>
+            <span id="liveRunners">12 Runners Online</span>
+        </div>
+        <div id="lastOrderTicker" class="text-cyan-400">Last Delivery: Just Now</div>
+    </div>
 
     <div id="preloader" class="fixed inset-0 z-[100] bg-white flex items-center justify-center">
         <div class="relative flex items-center">
@@ -17,68 +28,60 @@
         </div>
     </div>
 
-    <div id="regModal" class="fixed inset-0 z-[90] bg-blue-900/40 backdrop-blur-md flex items-center justify-center px-6 hidden">
+    <div id="regModal" class="fixed inset-0 z-[90] bg-blue-900/60 backdrop-blur-md flex items-center justify-center px-6 hidden">
         <div class="bg-white w-full max-w-md p-8 rounded-[40px] shadow-2xl">
-            <h3 class="text-2xl font-black text-blue-900 mb-2">Identify Yourself 🛡️</h3>
-            <p class="text-gray-400 text-sm mb-6">Enter your school details to access the errand board.</p>
+            <h3 class="text-2xl font-black text-blue-900 mb-2">Campus Security 🛡️</h3>
+            <p class="text-gray-400 text-sm mb-6">Enter your school details to continue.</p>
             <form id="regForm" class="space-y-4">
-                <input type="text" id="regName" placeholder="Full Name (as on ID)" class="w-full p-4 bg-gray-50 rounded-2xl border-none font-bold" required>
-                <input type="text" id="regMatric" placeholder="Matric Number" class="w-full p-4 bg-gray-50 rounded-2xl border-none font-bold" required>
-                <input type="tel" id="regPhone" placeholder="WhatsApp Number" class="w-full p-4 bg-gray-50 rounded-2xl border-none font-bold" required>
-                <button type="submit" class="w-full bg-blue-900 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg">Verify & Enter</button>
+                <input type="text" id="regName" placeholder="Full Name" class="w-full p-4 bg-gray-50 rounded-2xl border-none font-bold outline-none" required>
+                <input type="text" id="regMatric" placeholder="Matric Number" class="w-full p-4 bg-gray-50 rounded-2xl border-none font-bold outline-none" required>
+                <input type="tel" id="regPhone" placeholder="WhatsApp Number" class="w-full p-4 bg-gray-50 rounded-2xl border-none font-bold outline-none" required>
+                <button type="submit" class="w-full bg-blue-900 text-white py-5 rounded-2xl font-black uppercase tracking-widest">Verify & Enter</button>
             </form>
         </div>
     </div>
 
-    <nav class="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50 px-6 py-4">
+    <nav class="bg-white/90 backdrop-blur-md sticky top-0 z-50 px-6 py-4 border-b border-gray-100">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-black text-blue-900 tracking-tighter">SwiftFind<span class="text-cyan-400">.</span></h1>
-            <div id="userBadge" class="bg-gray-100 px-4 py-2 rounded-full text-[10px] font-black uppercase text-gray-400">Unverified</div>
+            <h1 id="brandLogo" class="text-2xl font-black text-blue-900 tracking-tighter cursor-pointer">SwiftFind<span class="text-cyan-400">.</span></h1>
+            <div id="userBadge" onclick="handleVerification()" class="cursor-pointer bg-gray-200 text-gray-500 px-4 py-2 rounded-full text-[10px] font-black uppercase">Verify Identity 🔓</div>
         </div>
     </nav>
 
     <main class="max-w-2xl mx-auto px-6 py-10 pb-32">
-        <div class="flex justify-between items-end mb-8">
-            <h2 class="text-3xl font-black text-blue-900">Active Tasks</h2>
-            <button onclick="openRequestForm()" class="bg-cyan-400 text-blue-900 px-4 py-2 rounded-xl text-xs font-black uppercase">+ New Request</button>
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-black text-blue-900">Live Tasks</h2>
+            <button onclick="openRequestForm()" class="bg-cyan-400 text-blue-900 px-5 py-3 rounded-2xl text-[10px] font-black uppercase shadow-lg">+ New Errand</button>
         </div>
-
-        <div id="errandFeed" class="space-y-6">
-            <div class="bg-white p-6 rounded-[35px] shadow-xl border border-gray-50 relative overflow-hidden">
-                <div class="absolute top-0 right-0 bg-blue-900 text-white px-4 py-1 rounded-bl-2xl text-[10px] font-black uppercase">₦400 Reward</div>
-                <h4 class="font-black text-blue-900 text-lg">🍱 Food Delivery</h4>
-                <p class="text-gray-400 text-sm mb-4">Pickup at Mummy J's → Deliver to Ethiope Hostel</p>
-                <button onclick="claimTask('SF-101')" class="w-full border-2 border-blue-900 text-blue-900 py-3 rounded-2xl font-black text-xs uppercase hover:bg-blue-900 hover:text-white transition">Claim Task</button>
-            </div>
-        </div>
+        <div id="errandFeed" class="space-y-6"></div>
     </main>
 
-    <div id="requestModal" class="fixed inset-0 z-[80] bg-blue-900/60 backdrop-blur-lg hidden flex items-end">
-        <div class="bg-white w-full rounded-t-[50px] p-8 max-w-lg mx-auto shadow-2xl transition-transform">
+    <div id="requestModal" class="fixed inset-0 z-[80] bg-blue-900/70 backdrop-blur-lg hidden flex items-end">
+        <div class="bg-white w-full rounded-t-[50px] p-8 max-w-lg mx-auto shadow-2xl">
             <div class="w-12 h-1 bg-gray-200 rounded-full mx-auto mb-6"></div>
-            <h3 class="text-2xl font-black text-blue-900 mb-6 text-center">Request an Errand</h3>
-            
-            <div class="space-y-4 max-h-[70vh] overflow-y-auto no-scrollbar pb-10">
+            <h3 class="text-2xl font-black text-blue-900 mb-6 text-center">Request Help</h3>
+            <div class="space-y-4 max-h-[65vh] overflow-y-auto no-scrollbar pb-6">
                 <select id="taskType" onchange="calculateFees()" class="w-full p-4 bg-gray-50 rounded-2xl font-bold">
-                    <option value="pickup">📦 Simple Pickup (Only Delivery Fee)</option>
-                    <option value="buy">🛒 Buy & Deliver (Item Cost + Fee)</option>
+                    <option value="pickup">📦 Pickup Only</option>
+                    <option value="buy">🛒 Buy & Deliver</option>
                 </select>
-                <textarea id="taskDetails" placeholder="What are we picking up/buying?" class="w-full p-4 bg-gray-50 rounded-2xl font-bold h-32"></textarea>
-                <input type="number" id="itemCost" oninput="calculateFees()" placeholder="Estimated Item Cost (₦)" class="w-full p-4 bg-gray-50 rounded-2xl font-bold">
-                <input type="number" id="runnerReward" oninput="calculateFees()" placeholder="Runner's Reward (₦)" class="w-full p-4 bg-gray-50 rounded-2xl font-bold">
+                <textarea id="taskDetails" placeholder="Details: Where from? Where to?" class="w-full p-4 bg-gray-50 rounded-2xl font-bold h-24 border-none outline-none"></textarea>
+                <input type="number" id="itemCost" oninput="calculateFees()" placeholder="Item Cost (₦)" class="w-full p-4 bg-gray-50 rounded-2xl font-bold">
+                <input type="number" id="runnerReward" oninput="calculateFees()" placeholder="Runner Reward (₦)" class="w-full p-4 bg-gray-50 rounded-2xl font-bold">
                 
                 <div class="bg-blue-50 p-6 rounded-3xl">
-                    <div class="flex justify-between text-xs font-bold text-blue-900 mb-2">
-                        <span>SwiftFind Service Fee:</span>
+                    <div class="flex justify-between text-[10px] font-bold text-blue-900 opacity-60">
+                        <span>SwiftFind Fee:</span>
                         <span id="serviceFeeDisplay">₦50</span>
                     </div>
-                    <div class="flex justify-between text-lg font-black text-blue-900">
-                        <span>Total to Pay:</span>
+                    <div class="flex justify-between text-xl font-black text-blue-900">
+                        <span>Total Pay:</span>
                         <span id="totalToPay">₦0</span>
                     </div>
                 </div>
                 
-                <button onclick="processPayment()" class="w-full bg-blue-900 text-white py-6 rounded-3xl font-black uppercase tracking-widest shadow-xl">Pay & Post Errand</button>
+                <button onclick="processPayment()" class="w-full bg-blue-900 text-white py-6 rounded-3xl font-black uppercase tracking-widest">Pay Securely</button>
+                <button onclick="closeRequestForm()" class="w-full text-gray-400 font-bold text-[10px] uppercase mt-4">Cancel</button>
             </div>
         </div>
     </div>
