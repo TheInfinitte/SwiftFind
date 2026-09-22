@@ -1,7 +1,7 @@
 // ==========================================
 // [ADMIN CONFIGURATION]
 // ==========================================
-const ADMIN_WHATSAPP = "2348128085588"; // Replace with your real WhatsApp number
+const ADMIN_WHATSAPP = "2349042579504"; // Replace with your real WhatsApp number
 let WEEKLY_CODE = "ABRAKA2026"; // Change this whenever you want to reset verification
 
 // ==========================================
